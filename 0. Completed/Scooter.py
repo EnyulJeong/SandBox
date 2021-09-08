@@ -32,6 +32,7 @@ background_width = background_size[0]
 background_height = background_size[1]
 background_x1 = 0
 background_x2 = background_width
+background_y = screen_height / 2 - background_height / 2
 background_speed = 0.4
 
 # scooter
@@ -50,6 +51,16 @@ song_num = 0
 song_play = 0 # 0 이면 무시, 1 이면 재생
 song_msg = "by. EnyulJeong"
 
+# button
+button_left = pygame.image.load(os.path.join(images_path, "button_left.png"))
+button_right = pygame.image.load(os.path.join(images_path, "button_right.png"))
+button_size = button_left.get_rect().size
+button_width = button_size[0]
+button_height = button_size[1]
+button_left_x = 20
+button_right_x = button_left_x + button_width + 20
+button_y = screen_height / 4 * 3 + background_height / 4 - button_height / 2
+
 ##################################################
 
 running = True
@@ -61,29 +72,50 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                song_num += 1
+        # 버튼
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if button_left_x <= mouse[0] <= button_left_x + button_width and button_y <= mouse[1] <= button_y + button_height:
+                song_num -= 1
                 song_play = 1
+            elif button_right_x <= mouse[0] <= button_right_x + button_width and button_y <= mouse[1] <= button_y + button_height:
+                song_num += 1
+                song_play = 1            
         
+    # 마우스
+    mouse = pygame.mouse.get_pos()
+
     # 음악
+        # song_num 끝 값 처리
+    if song_num == 5:
+        song_num = 0
+    elif song_num == -1:
+        song_num = 4
+
+        # 재생
     if song_play == 1:
-        if song_num == 1:
+        if song_num == 0:
+            song_msg = "by. EnyulJeong"
+        elif song_num == 1:
             song_msg = "C418 - Sweden Remix"
             music = 'E:C418 - Sweden Remix.mp3'
+            pygame.mixer.music.load(music)
+            pygame.mixer.music.play()
         elif song_num == 2:
             song_msg = "Undertale OST - Once Upon A Time"
             music = 'E:Undertale OST - Once Upon A Time.mp3'
+            pygame.mixer.music.load(music)
+            pygame.mixer.music.play()
         elif song_num == 3:
             song_msg = "Maroon5 - Sunday Morning"
             music = 'E:Maroon5 - Sunday Morning.mp3'
+            pygame.mixer.music.load(music)
+            pygame.mixer.music.play()
         elif song_num == 4:
             song_msg = "Frank Sinatra - L.O.V.E"
             music = 'E:Frank Sinatra - L.O.V.E.mp3'
-            song_num = 0
+            pygame.mixer.music.load(music)
+            pygame.mixer.music.play()
 
-        pygame.mixer.music.load(music)
-        pygame.mixer.music.play()
         song_play = 0
 
     # 배경 속도
@@ -118,14 +150,18 @@ while running:
 
     # 화면
     screen.fill((0, 0, 0)) # 전 song_text 를 덮음
-    screen.blit(background,(background_x1, screen_height / 2 - background_height / 2))
-    screen.blit(background,(background_x2, screen_height / 2 - background_height / 2))
+    screen.blit(background,(background_x1, background_y))
+    screen.blit(background,(background_x2, background_y))
     screen.blit(scooter, (scooter_x, scooter_y))
     
     # 음악
     song_text = game_font.render(song_msg, True, (255, 255, 255))
     song_rect = song_text.get_rect(topleft = (10, 50))
     screen.blit(song_text, song_rect)
+
+    # 버튼
+    screen.blit(button_left, (button_left_x, button_y))
+    screen.blit(button_right, (button_right_x, button_y))
 
     pygame.display.update()
     
