@@ -22,6 +22,7 @@ game_font = pygame.font.Font(None, 30)
 # current path
 current_path = os.path.dirname(__file__)
 images_path = os.path.join(current_path, "Scooter_images")
+songs_path = os.path.join(current_path, "Scooter_songs")
 
 ##################################################
 
@@ -97,22 +98,22 @@ while running:
             song_msg = "by. EnyulJeong"
         elif song_num == 1:
             song_msg = "C418 - Sweden Remix"
-            music = 'E:C418 - Sweden Remix.mp3'
+            music = os.path.join(songs_path, "C418 - Sweden Remix.mp3")
             pygame.mixer.music.load(music)
             pygame.mixer.music.play()
         elif song_num == 2:
             song_msg = "Undertale OST - Once Upon A Time"
-            music = 'E:Undertale OST - Once Upon A Time.mp3'
+            music = os.path.join(songs_path, "Undertale OST - Once Upon A Time.mp3")
             pygame.mixer.music.load(music)
             pygame.mixer.music.play()
         elif song_num == 3:
             song_msg = "Maroon5 - Sunday Morning"
-            music = 'E:Maroon5 - Sunday Morning.mp3'
+            music = os.path.join(songs_path, "Maroon5 - Sunday Morning.mp3")
             pygame.mixer.music.load(music)
             pygame.mixer.music.play()
         elif song_num == 4:
             song_msg = "Frank Sinatra - L.O.V.E"
-            music = 'E:Frank Sinatra - L.O.V.E.mp3'
+            music = os.path.join(songs_path, "Frank Sinatra - L.O.V.E.mp3")
             pygame.mixer.music.load(music)
             pygame.mixer.music.play()
 
