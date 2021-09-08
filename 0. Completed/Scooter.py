@@ -17,12 +17,7 @@ pygame.display.set_caption("Scooter")
 clock = pygame.time.Clock()
 
 # 폰트
-game_font = pygame.font.Font(None, 30) # 폰트 객체 생성 (폰트, 크기)
-
-# 음악
-music = 'E:y2mate.com - C418  Sweden Caution  Crisis Remix.mp3'
-pygame.mixer.music.load(music)
-pygame.mixer.music.play()
+game_font = pygame.font.Font(None, 30)
 
 # current path
 current_path = os.path.dirname(__file__)
@@ -48,9 +43,12 @@ scooter_x = 50
 scooter_y = 240
 
 to_x = 0
+updown = 0 # 0 이면 위로, 1 이면 아래로
+updown_num = 0
 
-updown = 0
-count = 0
+song_num = 0
+song_play = 0 # 0 이면 무시, 1 이면 재생
+song_msg = "by. EnyulJeong"
 
 ##################################################
 
@@ -63,6 +61,31 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                song_num += 1
+                song_play = 1
+        
+    # 음악
+    if song_play == 1:
+        if song_num == 1:
+            song_msg = "C418 - Sweden Remix"
+            music = 'E:C418 - Sweden Remix.mp3'
+        elif song_num == 2:
+            song_msg = "Undertale OST - Once Upon A Time"
+            music = 'E:Undertale OST - Once Upon A Time.mp3'
+        elif song_num == 3:
+            song_msg = "Maroon5 - Sunday Morning"
+            music = 'E:Maroon5 - Sunday Morning.mp3'
+        elif song_num == 4:
+            song_msg = "Frank Sinatra - L.O.V.E"
+            music = 'E:Frank Sinatra - L.O.V.E.mp3'
+            song_num = 0
+
+        pygame.mixer.music.load(music)
+        pygame.mixer.music.play()
+        song_play = 0
+
     # 배경 속도
     background_x1 -= background_speed * dt
     background_x2 -= background_speed * dt
@@ -82,8 +105,8 @@ while running:
     scooter_x += to_x * dt
 
     # 스쿠터 진동
-    count += 1
-    if count % 10 == 0:
+    updown_num += 1
+    if updown_num % 10 == 0:
         if updown == 0:
             scooter_y += 2
             updown = 1
@@ -93,15 +116,16 @@ while running:
 
     ##################################################
 
+    # 화면
+    screen.fill((0, 0, 0)) # 전 song_text 를 덮음
     screen.blit(background,(background_x1, screen_height / 2 - background_height / 2))
     screen.blit(background,(background_x2, screen_height / 2 - background_height / 2))
     screen.blit(scooter, (scooter_x, scooter_y))
     
-    # 소스
-    source_msg = "C418 - Sweden Remix"
-    source_text = game_font.render(source_msg, True, (255, 255, 255))
-    source_rect = source_text.get_rect(topleft = (10, 50))
-    screen.blit(source_text, source_rect)
+    # 음악
+    song_text = game_font.render(song_msg, True, (255, 255, 255))
+    song_rect = song_text.get_rect(topleft = (10, 50))
+    screen.blit(song_text, song_rect)
 
     pygame.display.update()
     
