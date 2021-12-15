@@ -10,14 +10,14 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 # 타이틀, 아이콘
 pygame.display.set_caption("W H I L E")
-icon = pygame.image.load("C:\\Users\\eyulj\\Desktop\\SandBox\\W H I L E_icon.png")
+icon = pygame.image.load("C:\\Users\\eyulj\\Documents\\Python\\SandBox\\W H I L E_icon.png")
 pygame.display.set_icon(icon)
 
 # FPS
 clock = pygame.time.Clock()
 
 # 폰트
-game_font = pygame.font.Font(None, 40) # 폰트 객체 생성 (폰트, 크기)
+game_font = pygame.font.Font(None, 40)
 
 # 색 상수
 BLACK = (0, 0, 0)
@@ -28,15 +28,14 @@ GREEN = (6, 186, 0)
 
 ##################################################
 
-# Logic
-
-line1 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"]
-line2 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"]
-line3 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"]
-line4 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"]
-line5 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"]
-line6 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"]
-line7 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"] # 9x7
+# 좌표    0    1    2    3    4    5    6    7    8
+line1 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"] # 0
+line2 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"] # 1
+line3 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"] # 2
+line4 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"] # 3
+line5 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"] # 4
+line6 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"] # 5
+line7 = ["O", "O", "O", "O", "O", "O", "O", "O", "O"] # 6
 line_lst = [line1, line2, line3, line4, line5, line6, line7] # 윗줄부터 순서대로
 
 class Coordinate:
@@ -46,13 +45,13 @@ class Coordinate:
     
     # 배치
     def deploy(self):
-        line_lst[self.location[1] - 1].pop(self.location[0] - 1) # O 빼기
-        line_lst[self.location[1] - 1].insert(self.location[0] - 1, self.name)
+        line_lst[self.location[1]].pop(self.location[0]) # O 빼기
+        line_lst[self.location[1]].insert(self.location[0], self.name)
 
     # 삭제
     def delete(self):
-        line_lst[self.location[1] - 1].pop(self.location[0] - 1)
-        line_lst[self.location[1] - 1].insert(self.location[0] - 1, "O")
+        line_lst[self.location[1]].pop(self.location[0])
+        line_lst[self.location[1]].insert(self.location[0], "O")
 
     # 움직임 = 삭제 + 배치
     def move(self, to_x, to_y):
@@ -84,17 +83,18 @@ point = 0
 
 ##################################################
 
-X = Coordinate("X", [5, 4])
+# 배치
+X = Coordinate("X", [4, 3])
 X.deploy()
-Y = Coordinate("Y", [1, 1])
+Y = Coordinate("Y", [0, 0])
 Y.deploy()
-Z1 = Coordinate("Z", [9, 1])
+Z1 = Coordinate("Z", [8, 0])
 Z1.deploy()
 Z1.crash = 0
-Z2 = Coordinate("Z", [1, 7])
+Z2 = Coordinate("Z", [0, 6])
 Z2.deploy()
 Z2.crash = 0
-Z3 = Coordinate("Z", [9, 7])
+Z3 = Coordinate("Z", [8, 6])
 Z3.deploy()
 Z3.crash = 0
 
@@ -126,7 +126,7 @@ while running:
                 Xmove_y = 0
 
     # 경계값
-    if 1<= X.location[0] + Xmove_x <= 9 and 1<= X.location[1] + Xmove_y <= 7:
+    if 0<= X.location[0] + Xmove_x <= 8 and 0<= X.location[1] + Xmove_y <= 6:
         X.move(Xmove_x, Xmove_y)
         
     # 적 움직임
@@ -136,6 +136,8 @@ while running:
 
     # 충돌처리
     if X.location == Y.location:
+        Y = Coordinate("Y", [X.location[0], X.location[1]])
+        Y.deploy()
         gameover_msg = "Terminated"
         running = False
 

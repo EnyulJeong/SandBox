@@ -1,5 +1,6 @@
 import pygame
 import os
+from pygame.constants import K_LEFT, K_RIGHT
 
 # 초기화
 pygame.init()
@@ -74,6 +75,7 @@ while running:
     dt = clock.tick(60)
 
     for event in pygame.event.get():
+        
         # 종료
         if event.type == pygame.QUIT:
             running = False
@@ -86,13 +88,16 @@ while running:
             elif button_right_x <= mouse[0] <= button_right_x + button_width and button_y <= mouse[1] <= button_y + button_height:
                 song_num += 1
                 song_play = 1
-
-        if event.type == pygame.MOUSEBUTTONUP:
-            if button_left_x <= mouse[0] <= button_left_x + button_width and button_y <= mouse[1] <= button_y + button_height:
-                pass
-            elif button_right_x <= mouse[0] <= button_right_x + button_width and button_y <= mouse[1] <= button_y + button_height:
-                pass
         
+        # 키보드
+        if event.type == pygame.KEYDOWN:
+            if event.key == K_RIGHT:
+                song_num += 1
+                song_play = 1
+            elif event.key == K_LEFT:
+                song_num -= 1
+                song_play = 1
+
     # 마우스
     mouse = pygame.mouse.get_pos()
 
@@ -143,12 +148,12 @@ while running:
             pygame.mixer.music.load(music)
             pygame.mixer.music.play()
         elif song_num == 8:
-            song_msg = "Thank You For Watching :)"
-        elif song_num == 9:
             song_msg = "Rick Astley - Never Gonna Give You Up"
             music = os.path.join(songs_path, "Rick Astley - Never Gonna Give You Up.mp3")
             pygame.mixer.music.load(music)
             pygame.mixer.music.play()
+        elif song_num == 9:
+            song_msg = "Thank You For Watching :)"
 
         song_play = 0
 
